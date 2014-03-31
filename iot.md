@@ -174,6 +174,8 @@ Internet是一个由计算机组成的网络，那么物联网就是一个由物
 
 ##系统框架##
 
+[image]: struct.bmp "系统框架"
+![系统框架][image] 
 
 ###为什么是Raspberry PI###
 
@@ -414,17 +416,6 @@ laravel用到了php的包管理工具composer，于是我们还需要用到compo
 ###Laravel Resources###
 
 上面的代码过于沉重，请让我用Ctrl+C来带来点知识吧。。
-
-
-  Verb        Path                        Action    Route Name
-  ----------- --------------------------- --------- ------------------
-  GET         /resource                   index     resource.index
-  GET         /resource/create            create    resource.create
-  POST        /resource                   store     resource.store
-  GET         /resource/{resource}        show      resource.show
-  GET         /resource/{resource}/edit   edit      resource.edit
-  PUT/PATCH   /resource/{resource}        update    resource.update
-  DELETE      /resource/{resource}        destroy   resource.destroy
 
 
 所以我们只需要专注于创建create,edit,show,destory,等等。好吧，你可能没有耐心了，但是在修改这个之前我们需要先在
