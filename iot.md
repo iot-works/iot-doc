@@ -74,7 +74,7 @@ Pi，那就找个路由器来当服务器吧，相关文章如下 :
 
 ### 注意
 
-<blockquote>！请尽可能少我的用我的网站做测试</blockquote>
+<blockquote>！请尽可能少用我的网站做测试</blockquote>
 
 
 如何开始
