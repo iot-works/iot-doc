@@ -1,8 +1,7 @@
 或许这个可以当成是你的毕业设计又或者你可以用它来控制你想控制的东西，总之你可以用它来做一个最小的物联网系统。
 
 不过，在这里可能没有那么复杂的功能，因为强调的是最小。BareMinimum，这也是为什么我没有改Arduino上面的工程名的原因，因为它是最小的，(PS：大家都懂的，如果玩硬件）。物联网，这个东西一直很复杂，也不是很复杂，只是从硬件到软件涉及到的东西过多了，不止一点点。当然写在本文的方案也有很多，不止这一个，只是这个算是基本的最小的，仅此而已。(转载保留 [Phodal's
-Blog](http://www.phodal.com/blog/bare-minimum-iot/) [Phodal's  zenthink](http://blog.csdn.net/phodal)) 
-
+Blog](http://www.phodal.com/blog/bare-minimum-iot/) )
 
 关于
 ----
@@ -174,8 +173,8 @@ Internet是一个由计算机组成的网络，那么物联网就是一个由物
 
 ##系统框架##
 
-[image]: struct.bmp "系统框架"
-![系统框架][image] 
+[image]: ./struct.bmp "系统框架"
+![系统框架][image]
 
 ###为什么是Raspberry PI###
 
