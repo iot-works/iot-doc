@@ -78,13 +78,13 @@ PI，那就找个路由器来当服务器吧，相关文章如下
 
 ！请尽可能少我的用我的网站做测试
 
-\
-
 如何开始
 --------
 
-git clone https://github.com/gmszone/iot.git cp iot/rest
-PATH\_OF\_HTDOCS/ 创建一个新的数据库，如iot 编辑 app/config/database.php
+    git clone https://github.com/gmszone/iot.git
+    cp iot/rest
+
+创建一个新的数据库，如iot 编辑 app/config/database.php
 
 <pre><code class="php">
 
@@ -238,8 +238,8 @@ laravel用到了php的包管理工具composer，于是我们还需要用到compo
     app/config/database.php
 
 要修改的就是这个
-<pre><code class="html">
-            'mysql' => array(
+
+             'mysql' => array(
                 'driver'    => 'mysql',
                 'host'      => 'localhost',
                 'database'  => 'iot',
@@ -250,7 +250,6 @@ laravel用到了php的包管理工具composer，于是我们还需要用到compo
                 'prefix'    => '',
             ),
 
-</code></pre>
 如果你已经有phpmyadmin，似乎对你来说已经很简单了，如果没有的话，就直接用
 
     mysql -uroot -p
@@ -284,10 +283,6 @@ laravel用到了php的包管理工具composer，于是我们还需要用到compo
 
 打开 app/database/***create_athomes_table.php这里的***是由日期和某些东西组成的，修改生成的代码为下面。
 
-
-
-<pre><code class="php">
-
     use Illuminate\Database\Schema\Blueprint;  
     use Illuminate\Database\Migrations\Migration;  
 
@@ -313,7 +308,6 @@ laravel用到了php的包管理工具composer，于是我们还需要用到compo
 
     }
 
-</code></pre>
 意思大致就是id是自加的，也就是我们在localhost/athome/{id}，当我们创建一个新的数据的时候，会自动加上去，最后一个timestamps批的是时间，会包含创建时间和修改时间。
 剩下的temperature,sensors1,sensors2是小数，以及只有真和假的led1。
 
@@ -339,7 +333,6 @@ laravel用到了php的包管理工具composer，于是我们还需要用到compo
 
 就会在app/controllers下面生成下面的代码
 
-<pre><code class="php">
     class AthomesController extends \BaseController {  
 
         /**
@@ -417,7 +410,6 @@ laravel用到了php的包管理工具composer，于是我们还需要用到compo
         }  
 
     }
-</code></pre>
 
 ###Laravel Resources###
 
@@ -438,13 +430,10 @@ laravel用到了php的包管理工具composer，于是我们还需要用到compo
 所以我们只需要专注于创建create,edit,show,destory,等等。好吧，你可能没有耐心了，但是在修改这个之前我们需要先在
 app/model加个class
 
-<pre><code class="php">
-
     class Athomes extends Eloquent {  
         protected $table = 'athomes';  
     }
 
-</code></pre>
 如果你想要的只是控制器Athomes的代码的话。。
 
 
@@ -607,7 +596,7 @@ app/model加个class
     	}
 
     }
-</code></pre>
+
 希望你能读懂，没有的话，关注下一节。
 
 下面这部分来自于之前的博客，这里就不多加论述了。
@@ -645,7 +634,7 @@ app/model加个class
 
        <link rel="stylesheet" type="text/css" href="<?= url('css/bootstrap.min.css') ?>" />
        <link rel="stylesheet" type="text/css" href="<?= url('css/bootstrap-select.min.css') ?>" />
- 
+
  以及javascript
 
 	<script type="text/javascript" src="<?= url('js/jquery.min.js')?>"></script>
@@ -654,13 +643,13 @@ app/model加个class
 	<script>
 	 $('.selectpicker').selectpicker();
  	</script>
- 
+
 
 ### 创建表单
 
 这里用到的是之前提到的那个作者写下的，稍微修改了一下。
 
-   <div class="row-fluid">
+    <div class="row-fluid">
       {{ HTML::ul($errors->all()) }}
       {{ Form::open(array('url' => 'athome')) }}
 
@@ -697,14 +686,11 @@ app/model加个class
 
 还需要修改一下之前的create()，添加一行
 
-<pre><code class="php">
-return Redirect::to('athome');
-</code></pre>
+    return Redirect::to('athome');
 
  也就是添加完后，重定向到首页查看，最后例子给出的create如下
 
-<pre><code class="php">
-        public function store()
+    public function store()
     {
         $rules = array(
             'led1'=>'required',
@@ -730,8 +716,6 @@ return Redirect::to('athome');
             return Redirect::to('athome');
         }
     }
-</code></pre>
-
 
 编辑edit
 --------
@@ -812,7 +796,7 @@ return Redirect::to('athome');
 
     </body>
     </html>
-    
+
 
 最后效果见:[http://b.phodal.com/][bphodal]
 
@@ -1185,7 +1169,6 @@ led1的值是0，所以result[0]['led1]的值是0,如果你用过Ruby，那么�
 
 如果你需要POST，又懒得去看原文，那么POST代码在下面，只是因为我暂时没有时间去研究Android里面的这些，以及怎样继续这个项目，因为最小的话，似乎已经不再需要添加任何东西了。
 
-<pre><code class="php">
 
                 RestClient clientPost = new RestClient(url);
                 clientPost.AddParam("temperature", "23.1");
@@ -1202,7 +1185,6 @@ led1的值是0，所以result[0]['led1]的值是0,如果你用过Ruby，那么�
                 } catch (Exception e) {
                         vshow.setText(e.toString());
                 }
-</code></pre>
 
 大致上是类似的，注意一下都是字符就行了。
 
