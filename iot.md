@@ -1,6 +1,9 @@
-或许这个可以当成是你的毕业设计又或者你可以用它来控制你想控制的东西，总之你可以用它来做一个最小的物联网系统。
+### 引言
+你可以将这个系统当成是你的毕业设计，或者用它来控制你想控制的东西，总之你可以用它来做一个最小的物联网系统。
 
-不过，在这里可能没有那么复杂的功能，因为强调的是最小。BareMinimum，这也是为什么我没有改Arduino上面的工程名的原因，因为它是最小的，(PS：大家都懂的，如果玩硬件）。物联网，这个东西一直很复杂，也不是很复杂，只是从硬件到软件涉及到的东西过多了，不止一点点。当然写在本文的方案也有很多，不止这一个，只是这个算是基本的最小的，仅此而已。(转载保留 [Phodal's
+**不过，在这里可能没有那么复杂的功能，因为强调的是最小。**
+
+BareMinimum，这也是为什么我没有改Arduino上面的工程名的原因，因为它是最小的，(PS：大家都懂的，如果玩硬件）。物联网，这个东西一直很复杂，也不是很复杂，只是从硬件到软件涉及到的东西过多了，不止一点点。当然写在本文的方案也有很多，不止这一个，只是这个算是基本的最小的，仅此而已。(转载保留 [Phodal's
 Blog](http://www.phodal.com/blog/bare-minimum-iot/) )
 
 关于
@@ -30,6 +33,8 @@ PHP 我学得不是很好，因为Laravel没有让我学好，但是让我能做
 
 ### 相关文章及专栏
 
+-	CSDN - [Laravel专栏](http://blog.csdn.net/column/details/laravel.html)
+
 1.  [Laravel
     RESTful快速部署指南（一）](http://blog.csdn.net/phodal/article/details/15340355)
 2.  [Laravel
@@ -37,22 +42,18 @@ PHP 我学得不是很好，因为Laravel没有让我学好，但是让我能做
 3.  [Laravel
     RESTful快速部署指南（三）](http://blog.csdn.net/phodal/article/details/15364481)
 
-#### 专栏
-
-[Laravel](http://blog.csdn.net/column/details/laravel.html)
-
 ### 相关知识
 
-#### 搞硬件的同学需要重点了解的知识
+#### 软件
 
 -   RESTful
 -   Ajax
 -   JSON
 
-#### 搞软件的同学需要重要了解的知识
+#### 硬件
 
+-   硬件编程
 -   串口通信
--   高低电平
 
 ### 关于服务器
 
@@ -62,82 +63,77 @@ PHP 我学得不是很好，因为Laravel没有让我学好，但是让我能做
 
 ### 补充说明
 
-Arduino不是必需的，只要你懂得如何用你的芯片进行串口通信。
+Arduino 不是必需的，只要你懂得如何用你的芯片进行串口通信。
 
-考虑到Raspberry PI的成本可能会有点高，你可以试着用OpenWRT
-Linux，主要用在路由器用的，上面可以跑Python。或者等等过些时候的小米路由器，可以加这个在上面。
+考虑到 Raspberry Pi 的成本可能会有点高，你可以试着用 OpenWRT
+Linux，主要用在路由器用的，上面可以跑 Python。或者等等过些时候的小米路由器，可以加这个在上面。
 
-如果你没有服务器没有Raspberry
-PI，那就找个路由器来当服务器吧，相关文章如下
+如果你没有服务器没有 Raspberry
+Pi，那就找个路由器来当服务器吧，相关文章如下
 
-[Openwrt python,openwrt上使用Python\
-](http://blog.csdn.net/phodal/article/details/8521712)对了，如果你觉得哪里有问题记得在GITHUB上提出来，而不是在原文。
+[Openwrt python,openwrt上使用Python](http://blog.csdn.net/phodal/article/details/8521712)对了，如果你觉得哪里有问题记得在 Github 上提出来，而不是在原文。
 
 ### 注意
 
-！请尽可能少我的用我的网站做测试
+<blockquote>！请尽可能少我的用我的网站做测试</blockquote>
+
 
 如何开始
 --------
 
-    git clone https://github.com/gmszone/iot.git
-    cp iot/rest
+    $ git clone https://github.com/gmszone/iot.git
+    $ cp iot/rest
 
 创建一个新的数据库，如iot 编辑 app/config/database.php
 
 <pre><code class="php">
-
-        'mysql' => array(
-        'driver' => 'mysql',
-        'host' => 'localhost',
-        'database' => 'iot',
-        'username' => 'root',
-        'password' => ' ',
-        'charset' => 'utf8',
-        'collation' => 'utf8_unicode_ci',
-        'prefix' => '',
-        ),
+    'mysql' => array(
+    'driver' => 'mysql',
+    'host' => 'localhost',
+    'database' => 'iot',
+    'username' => 'root',
+    'password' => ' ',
+    'charset' => 'utf8',
+    'collation' => 'utf8_unicode_ci',
+    'prefix' => '',
+    ),
 </code></pre>
 
 
 配置nginx，添加，详细可参考nginx下面的配置
 
 <pre><code class="bash">
+    # include /etc/nginx/includes/enforce_non_www;
+    if ($host ~* ^www\.(.*))
+    {
+    set $host_without_www $1;
+    rewrite ^/(.*)$ $scheme://$host_without_www/$1 permanent;
+    }
 
-        # include /etc/nginx/includes/enforce_non_www;
-        if ($host ~* ^www\.(.*))
-        {
-        set $host_without_www $1;
-        rewrite ^/(.*)$ $scheme://$host_without_www/$1 permanent;
-        }
-
-        # Check if file exists
-        if (!-e $request_filename)
-        {
-        rewrite ^/(.*)$ /index.php?/$1 last;
-        break;
-        }
+    # Check if file exists
+    if (!-e $request_filename)
+    {
+    rewrite ^/(.*)$ /index.php?/$1 last;
+    break;
+    }
 </code></pre>
 
 
 测试
 
 <pre><code class="bash">
-
-        sudo python python/get.py
-
+    $ sudo python python/get.py
 </code></pre>
 
 
 再根据需要修改端口，视真实的端口而修改。
 
 ##关于物联网##
-<blockquote>物联网（Internet of Things，缩写IOT）是一个基于互联网、传统电信网等信息承载体，让所有能够被独立寻址的普通物理对象实现互联互通的网络。</blockquote>
+<blockquote>物联网（Internet of Things，缩写IOT）是一个基于互联网、传统电信网等信息承载体，让所有能够被独立寻址的普通物理对象实现互联互通的网络。
 
-<blockquote>物联网一般为无线网，由于每个人周围的设备可以达到一千至五千个，所以物联网可能要包含500万亿至一千万亿个物体，在物联网上，每个人都可以应用电子标签将真实的物体上网联结，在物联网上都可以查找出它们的具体位置。通过物联网可以用中心计算机对机器、设备、人员进行集中管理、控制，也可以对家庭设备、汽车进行遥控，以及搜寻位置、防止物品被盗等各种应用。</blockquote>
+物联网一般为无线网，由于每个人周围的设备可以达到一千至五千个，所以物联网可能要包含500万亿至一千万亿个物体，在物联网上，每个人都可以应用电子标签将真实的物体上网联结，在物联网上都可以查找出它们的具体位置。通过物联网可以用中心计算机对机器、设备、人员进行集中管理、控制，也可以对家庭设备、汽车进行遥控，以及搜寻位置、防止物品被盗等各种应用。</blockquote>
 
-简单的来说
-Internet是一个由计算机组成的网络，那么物联网就是一个由物体(Things)组成的网络，只不过其依赖于Internet，是Internet的一部分。
+简单的来说 Internet 是一个由计算机组成的网络，那么物联网就是一个由物体(Things)组成的网络，只不过其依赖于 Internet，是 Internet 的一部分。
 
 ##最小物联网系统##
 这个也就是我们要讨论的主题了，我们要做的最小物联网系统其实也就相当于是一个平台。我们可以上传我们各种物体的信息，同时给予这些物体一些属性，我们也可以通过网络来控制这些物体，而他们之间也可以相互控制。因此，我们需要给他们提供一个网络，这就是RESTful的由来。
@@ -161,11 +157,11 @@ Internet是一个由计算机组成的网络，那么物联网就是一个由物
 例如，一个简单的例子，
 列举所有物体状态，
 
-    GET http://localhost/athome
+    $ GET http://localhost/athome
 
 呈现某一特定状态，
 
-    GET http://localhost/athome/1/
+    $ GET http://localhost/athome/1/
 
 剩下的部分这里就不多说了，多说无益，可以自己谷歌去。
 
@@ -176,88 +172,88 @@ Internet是一个由计算机组成的网络，那么物联网就是一个由物
 [image]: ./struct.bmp "系统框架"
 ![系统框架][image]
 
-###为什么是Raspberry PI###
+###为什么是 Raspberry Pi###
 
-Raspberry Pi在这里只是充当了数据的发送和接收，虽然我们可以直接将Raspberry PI作为控制的对象，但是将这个从中剥离来讲清楚系统的结构会更加简单。从而，可以让我们把核心注意力聚焦在要解决的问题上，也就是数据传送，每个部分都可以简单地从系统剥离出来，用另外的事物来替换。
+Raspberry Pi 在这里只是充当了数据的发送和接收，虽然我们可以直接将 Raspberry Pi 作为控制的对象，但是将这个从中剥离来讲清楚系统的结构会更加简单。从而，可以让我们把核心注意力聚焦在要解决的问题上，也就是数据传送，每个部分都可以简单地从系统剥离出来，用另外的事物来替换。
 
 
-###为什么是Arduino###
-这个问题的答案和上面是一样的，只是因为有些搞物联网是从软件过来的，对于他们来说去理解端口的难道可能有点大。所以，我们在简化系统设计的同时，也把系统的代码简化了。因为Arduino足够的简单，我们可以关心问题的本质，而不是如何去编程。
+###为什么是 Arduino###
+
+这个问题的答案和上面是一样的，只是因为有些搞物联网是从软件过来的，对于他们来说去理解端口的难道可能有点大。所以，我们在简化系统设计的同时，也把系统的代码简化了。因为 Arduino 足够的简单，我们可以关心问题的本质，而不是如何去编程。
 
 ###为什么是Ajax###
-至于什么是Ajax，
 
-<blockquote>AJAX即“Asynchronous JavaScript and XML”（异步的JavaScript与XML技术），指的是一套综合了多项技术的浏览器端网页开发技术。
+<blockquote>AJAX即 "Asynchronous JavaScript and XML" （异步的 JavaScript 与 XML 技术），指的是一套综合了多项技术的浏览器端网页开发技术。
 </blockquote>
 
-这里的目的只是在于演示如何运用这些数据，使它具有他应有的价值，而不在于技术本身。当然ajax不是必需的，如果你需要的只是用来控制这个灯。
+这里的目的只是在于演示如何运用这些数据，使它具有他应有的价值，而不在于技术本身。当然 ajax 不是必需的，如果你需要的只是用来控制这个灯。
 
-###为什么是Laravel###
-只是因为个人喜爱，你也可以用Ruby On Rails来搭建这样一个功能，或者是Java。只不过PHP在我的服务器上运行得挺不错的，而且我又不需要重新去写配置那些配置。
-同时Laravel可以简单的开发我们所需要的功能，换句话说他是PHP世界的Ruby On Rails。
+###为什么是 Laravel###
+只是因为个人喜爱，你也可以用 Ruby On Rails 来搭建这样一个功能，或者是 Java。只不过 PHP 在我的服务器上运行得挺不错的，而且我又不需要重新去写配置那些配置。
+同时 Laravel 可以简单的开发我们所需要的功能，换句话说他是 PHP 世界的 Ruby On Rails。
 
 
-这里不会再重述之前的问题，这里只是将需要的步骤一个个写下来，然后丢到这里好好说一下。至于RESTful是什么，前面已经介绍了，就不再重复了。那么下面，我们就用Laravel来搭建一个平台给物联网用的。
+这里不会再重述之前的问题，这里只是将需要的步骤一个个写下来，然后丢到这里好好说一下。至于 RESTful 是什么，前面已经介绍了，就不再重复了。那么下面，我们就用 Laravel 来搭建一个平台给物联网用的。
 
-##安装Laravel##
-这个就比较简单了，不过在那之前你要有git以及安装了php环境，这个在linux上面比较好实现，可以用Raspberry PI或者是你的电脑来做这个，不一定用用上你的服务器。
+##安装 Laravel##
+这个就比较简单了，不过在那之前你要有 gi t以及安装了 php 环境，这个在 linux 上面比较好实现，可以用 Raspberry Pi 或者是你的电脑来做这个，不一定用用上你的服务器。
 
-    git clone https://github.com/laravel/laravel‎
+    $ git clone https://github.com/laravel/laravel‎
 
-先clone这个git，如果你没有安装好PHP，请安装好，and go on。
+先 clone 这个 git，如果你没有安装好 PHP，请安装好，and go on。
 
-    cd laravel
+    $ cd laravel
 
-laravel用到了php的包管理工具composer，于是我们还需要用到composer，与Laravel相比也算是一个优雅的工具。
+laravel 用到了 php 的包管理工具 composer，于是我们还需要用到 composer，与 Laravel 相比也算是一个优雅的工具。
 
-    curl -sS https://getcomposer.org/installer | php
+    $ curl -sS https://getcomposer.org/installer | php
 
-这里推荐的是linux系统，如果你是*nix都是可以的(ps:mac os x属于unix分支），除了windows，所以如果是windows，请直接下载
+这里推荐的是 linux 系统，如果你是 *nix 都是可以的(ps:mac os x属于unix分支），除了 windows，所以如果是 windows，请直接下载
 
 [Composer-Setup][composer]
 
 然后让我们安装所需要的那些包
 
-    php composer.phar install
+    $ php composer.phar install
 
-当然这里用的是比较通用的，如果你是*nix，有支持可以直接
+当然这里用的是比较通用的，如果你是 *nix，有支持可以直接
 
-    composer install
+    $ composer install
 
 
 ##配置MySQL##
-这里并不会列举MySQL的安装方法，如果你是openSUSE，可以
+这里并不会列举 MySQL 的安装方法，如果你是 openSUSE，可以
 
-    zypper install mysql
+    $ zypper install mysql
 
-这个也可以，不过最近我尽量到迁移到MariaDB了。
+这个也可以，不过最近我尽量到迁移到 MariaDB 了。
 
-    zypper install mariadb
+    $ zypper install mariadb
 
-当然，最简单的方法是直接上官网。这里说的是修改database.php
+当然，最简单的方法是直接上官网。这里说的是修改 database.php
 
     app/config/database.php
 
 要修改的就是这个
 
-             'mysql' => array(
-                'driver'    => 'mysql',
-                'host'      => 'localhost',
-                'database'  => 'iot',
-                'username'  => 'root',
-                'password'  => '940217',
-                'charset'   => 'utf8',
-                'collation' => 'utf8_unicode_ci',
-                'prefix'    => '',
-            ),
+	'mysql' => array(
+        'driver'    => 'mysql',
+        'host'      => 'localhost',
+        'database'  => 'iot',
+        'username'  => 'root',
+        'password'  => '940217',
+        'charset'   => 'utf8',
+        'collation' => 'utf8_unicode_ci',
+        'prefix'    => '',
+    ),
 
 如果你已经有phpmyadmin，似乎对你来说已经很简单了，如果没有的话，就直接用
 
-    mysql -uroot -p
+    $ mysql -uroot -p
 
 来创建一个新的
 
-     CREATE DATABASE IF NOT EXISTS bbs default charset utf8 COLLATE utf8_general_ci;
+	CREATE DATABASE IF NOT EXISTS bbs default charset utf8 COLLATE utf8_general_ci;
 
   [composer]: https://getcomposer.org/Composer-Setup.exe
 
@@ -280,7 +276,7 @@ laravel用到了php的包管理工具composer，于是我们还需要用到compo
 表的概念，类似于在Excel中的表，如果你真实不懂数据库。
 让我们创建一个athomes的表，为什么是athomes，因为以前在写android程序的时候就叫的是athome，忽略掉这些将要的因素吧。
 
-    php artisan migrate:make create_athomes_table
+    $ php artisan migrate:make create_athomes_table
 
 打开 app/database/***create_athomes_table.php这里的***是由日期和某些东西组成的，修改生成的代码为下面。
 
@@ -315,11 +311,12 @@ laravel用到了php的包管理工具composer，于是我们还需要用到compo
 ###数据库迁移###
 我们只是写了我们需要的数据的格式而并没有丢到数据库里，
 
-    php artisan migrate
+    $ php artisan migrate
 
 这个就是我们执行迁移的命令，如果你用phpmyadmin可以直接打开查看，没有的话，可以。
 
-    mysql -uroot -p
+    $ mysql -uroot -p
+
     use iot;
     select * from athomes;
 
@@ -330,7 +327,7 @@ laravel用到了php的包管理工具composer，于是我们还需要用到compo
 
 用下面的代码实现我们称之为Athomes控制器的创建
 
-    php artisan controller:make AthomesController  
+    $ php artisan controller:make AthomesController  
 
 就会在app/controllers下面生成下面的代码
 
@@ -414,11 +411,11 @@ laravel用到了php的包管理工具composer，于是我们还需要用到compo
 
 ###Laravel Resources###
 
-上面的代码过于沉重，请让我用Ctrl+C来带来点知识吧。。
+上面的代码过于沉重，请让我用 Ctrl+C 来带来点知识吧。
 
 
-所以我们只需要专注于创建create,edit,show,destory,等等。好吧，你可能没有耐心了，但是在修改这个之前我们需要先在
-app/model加个class
+所以我们只需要专注于创建 create, edit, show, destory 等等。好吧，你可能没有耐心了，但是在修改这个之前我们需要先在 
+app/model 加个 class
 
     class Athomes extends Eloquent {  
         protected $table = 'athomes';  
@@ -592,22 +589,22 @@ app/model加个class
 下面这部分来自于之前的博客，这里就不多加论述了。
 这个也就是我们要的模板，
 
-修改Create()
+修改 Create()
 ------------
 
 <pre><code class="php">
-   public function create()
-    {
-        $maxid=Athomes::max('id');
-        return View::make('athome.create')->with('maxid',$maxid);
-    }
+	public function create()
+	{
+	    $maxid=Athomes::max('id');
+	    return View::make('athome.create')->with('maxid',$maxid);
+	}
 </code></pre>
 
 
 这里需要在app/views/创建一个athome里面创建一个create.blade.php，至于maxid，暂时还不需要，后面会用到show。如果只需要模板，可以简化为
 
 <pre><code class="php">
-   public function create()
+	public function create()
     {
         return View::make('athome.create');
     }
@@ -622,8 +619,8 @@ app/model加个class
 
 由于使用到了bootstrap以及bootstrap-select，记得添加css。
 
-       <link rel="stylesheet" type="text/css" href="<?= url('css/bootstrap.min.css') ?>" />
-       <link rel="stylesheet" type="text/css" href="<?= url('css/bootstrap-select.min.css') ?>" />
+	<link rel="stylesheet" type="text/css" href="<?= url('css/bootstrap.min.css') ?>" />
+	<link rel="stylesheet" type="text/css" href="<?= url('css/bootstrap-select.min.css') ?>" />
 
  以及javascript
 
@@ -631,8 +628,8 @@ app/model加个class
 	<script type="text/javascript" src="<?= url('js/bootstrap.min.js') ?>"></script>
 	<script type="text/javascript" src="<?= url('js/bootstrap-select.min.js') ?>"></script>
 	<script>
-	 $('.selectpicker').selectpicker();
- 	</script>
+	$('.selectpicker').selectpicker();
+	</script>
 
 
 ### 创建表单
@@ -670,15 +667,15 @@ app/model加个class
 
       </div>
 
-开关一开始打算用checkbox，加上bootstrap-switch实现
+开关一开始打算用 checkbox，加上 bootstrap-switch 实现
     ON OFF
-弱弱地觉得还是没掌握好的节奏，所以最后用select来实现。
+弱弱地觉得还是没掌握好的节奏，所以最后用 select 来实现。
 
-还需要修改一下之前的create()，添加一行
+还需要修改一下之前的 create()，添加一行
 
     return Redirect::to('athome');
 
- 也就是添加完后，重定向到首页查看，最后例子给出的create如下
+ 也就是添加完后，重定向到首页查看，最后例子给出的 create 如下
 
     public function store()
     {
@@ -707,10 +704,10 @@ app/model加个class
         }
     }
 
-编辑edit
+编辑 edit
 --------
 
-完整的blade模板文件
+完整的 blade 模板文件
 
     <!DOCTYPE html lang="zh-cn">
     <html>
@@ -792,11 +789,11 @@ app/model加个class
 
 代码位置:[http://b.phodal.com/js/app.js][appjs]
 
-我觉得似乎我把这个代码写长了，但是我不是故意，只是必需的。先观察Ajax部分：
+我觉得似乎我把这个代码写长了，但是我不是故意，只是必需的。先观察 Ajax 部分：
 
 ##Ajax##
 
-剥离后的Ajax部分代码如下所示，主要用的是jQuery框架的getJSON来实现的
+剥离后的Ajax部分代码如下所示，主要用的是 jQuery 框架的 getJSON 来实现的
 
     var dataLength = [];
 
@@ -810,9 +807,9 @@ app/model加个class
             });
     };
 
-实际上，我们做的只是从/athome/下面获取数据，再将数据堆到数组里面，再把这部分放到图形中。等等，什么是Ajax?
+实际上，我们做的只是从 /athome/ 下面获取数据，再将数据堆到数组里面，再把这部分放到图形中。等等，什么是 Ajax?
 
- - AJAX = Asynchronous JavaScript and XML（异步的 JavaScript 和 XML）。
+ - AJAX : Asynchronous JavaScript and XML（异步的 JavaScript 和 XML）。
  - AJAX 不是新的编程语言，而是一种使用现有标准的新方法。
  - AJAX 是与服务器交换数据并更新部分网页的艺术，在不重新加载整个页面的情况下。
 
@@ -823,23 +820,23 @@ JSON我们前面也已经了解过了，看看getJSON吧。
 
 通过get请求得到json数据
 
- - ·url用于提供json数据的地址页
- - ·data(Optional)用于传送到服务器的键值对
- - ·callback(Optional)回调函数，json数据请求成功后的处理函数
+ - ·url 用于提供 json 数据的地址页
+ - ·data(Optional) 用于传送到服务器的键值对
+ - ·callback(Optional) 回调函数，json 数据请求成功后的处理函数
 
-我想你似乎应该懂得了一点，就是在不刷新网页的同时，用javascript获取数据放到图表上，就这么简单。
+我想你似乎应该懂得了一点，就是在不刷新网页的同时，用 javascript 获取数据放到图表上，就这么简单。
 
 ##HighChart##
 再省去一部分，摘自我原来的博客
 
 HIGHCHARTS
-Highcharts是一个制作图表的纯Javascript类库，主要特性如下：
+Highcharts 是一个制作图表的纯 Javascript 类库，主要特性如下：
 
- - 兼容性：兼容当今所有的浏览器，包括iPhone、IE和火狐等等；
+ - 兼容性：兼容当今所有的浏览器，包括 iPhone、IE 和火狐等等；
  - 对个人用户完全免费；
- - 纯JS，无BS；
+ - 纯 JS，无 BS；
  - 支持大部分的图表类型：直线图，曲线图、区域图、区域曲线图、柱状图、饼装图、散布图；
- - 跨语言：不管是PHP、Asp.net还是Java都可以使用，它只需要三个文件：一个是Highcharts的核心文件highcharts.js，还有a canvas emulator for IE和Jquery类库或者MooTools类库；
+ - 跨语言：不管是 PHP、Asp.net 还是 Java 都可以使用，它只需要三个文件：一个是Highcharts 的核心文件 highcharts.js，还有 a canvas emulator for IE 和 Jquery类库或者 MooTools 类库；
  - 提示功能：鼠标移动到图表的某一点上有提示信息；
  - 放大功能：选中图表部分放大，近距离观察图表；
  - 易用性：无需要特殊的开发技能，只需要设置一下选项就可以制作适合自己的图表；
@@ -904,14 +901,14 @@ Highcharts是一个制作图表的纯Javascript类库，主要特性如下：
 
 ##jQuery Mobile##
 
-在首页上看到的那个效果是jQuery Mobile。。
+在首页上看到的那个效果是 jQuery Mobile。。
 
 
 [bphodal]:http://b.phodal.com/
 [appjs]:http://b.phodal.com/js/app.js
 
 
-这里写的数据通讯指的是两部分，一部分是与服务器，一部分是与单片机。这样设计的另外一个原因是，更好的分层，能让我们更好的理解这个系统。负责这个功能的这里用的是Raspberry PI，或者是你的PC两者都可以，我想你也看到了之前的代码。那么先让我们看看与服务器通信的这部分。
+这里写的数据通讯指的是两部分，一部分是与服务器，一部分是与单片机。这样设计的另外一个原因是，更好的分层，能让我们更好的理解这个系统。负责这个功能的这里用的是 Raspberry Pi，或者是你的PC两者都可以，我想你也看到了之前的代码。那么先让我们看看与服务器通信的这部分。
 
 ##服务器通讯##
 示例中的代码是这样子的，如果你没有看懂的话，那么等等 。
@@ -937,11 +934,11 @@ Highcharts是一个制作图表的纯Javascript类库，主要特性如下：
             status=result[0]['led1']
             print status
 
-这里做的事情有两件，一件是从服务器GET，另外一个就是解析JSON数据。
+这里做的事情有两件，一件是从服务器 GET，另外一个就是解析 JSON 数据。
 
-如果你用的是*nix，应该就自带curl了，可以试着用下面的命令来GET
+如果你用的是 *nix，应该就自带 curl 了，可以试着用下面的命令来 GET
 
-    curl http://b.phodal.com/athome/1
+    $ curl http://b.phodal.com/athome/1
 
 那么应该返回的是下面的结果
 
@@ -953,19 +950,19 @@ Highcharts是一个制作图表的纯Javascript类库，主要特性如下：
 
 
 ###数据解析###
-python带有json解析模块，我们在这里只需要用json.load()来解析获取下面的date就可以了
+python 带有 json 解析模块，我们在这里只需要用 json.load() 来解析获取下面的 date 就可以了
 
     result=json.load(date)
 
-解析完的result相当于是C语言里面的数组，在这里相当于是一个二维数组，我们只需要result[0]['led1']，在python里面叫做字典，意思就是和字典一样。
+解析完的 result 相当于是C语言里面的数组，在这里相当于是一个二维数组，我们只需要 result[0]['led1']，在 python 里面叫做字典，意思就是和字典一样。
 
-     "led1":0
+	"led1":0
 
-led1的值是0，所以result[0]['led1]的值是0,如果你用过Ruby，那么这个和其中的Hash差不多。
+led1的值是 0，所以 result[0]['led1]的值是 0,如果你用过 Ruby，那么这个和其中的 Hash 差不多。
 
-因此在这里我们拿到了服务器上面的控制状态的指令，也就是0。我们还需要传给单片机，也就是Arduino。。
+因此在这里我们拿到了服务器上面的控制状态的指令，也就是 0。我们还需要传给单片机，也就是 Arduino。。
 
-在我们完成了前面的几部分之后，我们也需要把这最后一部分解决，这里更多的是硬件，Arduino的存在可以让硬件更简单。
+在我们完成了前面的几部分之后，我们也需要把这最后一部分解决，这里更多的是硬件， Arduino 的存在可以让硬件更简单。
 
 ##Arduino##
 
@@ -997,7 +994,7 @@ led1的值是0，所以result[0]['led1]的值是0,如果你用过Ruby，那么�
       }
     }
 
-这个代码看上去似乎会有点复杂，但是让我们看点基础的，也就是由Arduino来控制一个LED的亮和灭。
+这个代码看上去似乎会有点复杂，但是让我们看点基础的，也就是由 Arduino 来控制一个 LED 的亮和灭。
 
     int led = 13;
 
@@ -1016,42 +1013,42 @@ led1的值是0，所以result[0]['led1]的值是0,如果你用过Ruby，那么�
 
 ##串口通信##
 
-<blockquote>串行接口是一种可以将接受来自CPU的并行数据字符转换为连续的串行数据流发送出去，同时可将接受的串行数据流转换为并行的数据字符供给CPU的器件。一般完成这种功能的电路，我们称为串行接口电路。</blockquote>
+<blockquote>串行接口是一种可以将接受来自 CPU 的并行数据字符转换为连续的串行数据流发送出去，同时可将接受的串行数据流转换为并行的数据字符供给 CPU 的器件。一般完成这种功能的电路，我们称为串行接口电路。</blockquote>
 
-简单地来说，我们誻就是用这个来实现通信的，用之前的RaspberryPI 发送1和0给Arduino。那么我们在Arduino上就只是接受和执行，这个由loop里面的if来执行
+简单地来说，我们誻就是用这个来实现通信的，用之前的 Raspberry Pi 发送 1 和 0 给 Arduino。那么我们在 Arduino 上就只是接受和执行，这个由 loop 里面的 if 来执行
 
 ###初始化串口###
 
-如果你真心不喜欢51上的复杂的串口，那么我想Arduino又是解放双手的东西了。
+如果你真心不喜欢51上的复杂的串口，那么我想 Arduino 又是解放双手的东西了。
 
-     Serial.begin(9600);
+	Serial.begin(9600);
 
-这个就是串口初始化，速率为9600。
+这个就是串口初始化，速率为 9600。
 
 ###串口读取###
 
 
-     while (Serial.available()<0)
-      {
-        int inChar = Serial.read();
-        if (isDigit(inChar)) {
-          inString += (char)inChar;
-        }
-        serialData=inString.toInt();
+	while (Serial.available()<0)
+	{
+	int inChar = Serial.read();
+	if (isDigit(inChar)) {
+	  inString += (char)inChar;
+	}
+	serialData=inString.toInt();
 
 用于读取的就是这么一行
 
-     int inChar=Serial.read()
+	int inChar=Serial.read()
 
-而下面的部分则是刚我们接收到的数据转换为1,由于接到的为char类型，那么我们需要转为转为Int进行判断。
+而下面的部分则是刚我们接收到的数据转换为1,由于接到的为 char 类型，那么我们需要转为转为 int 进行判断。
 
 ####为什么不直接用'1'####
 
-只是为了写给需要的同学用的，也可以直接在上面用if(serialData=='1')，上面写可以让后期扩展的时候方便一点。
+只是为了写给需要的同学用的，也可以直接在上面用 if(serialData=='1')，上面写可以让后期扩展的时候方便一点。
 
-加上之前的部分，我们算是把开源的地方做了一个遍，因为Windows Phone需要在Windows 8上开发的原因，加上我没有Macbook以及iPhone，所以在这里只会有一个Android的示例。当然，原因上也是一样的，相信这些也不会很难。
+加上之前的部分，我们算是把开源的地方做了一个遍，因为 Windows Phone 需要在 Windows 8 上开发的原因，加上我没有 Macbook 以及 iPhone，所以在这里只会有一个 Android 的示例。当然，原因上也是一样的，相信这些也不会很难。
 
-原理上和Raspberry PI的原理很像，也就是GET数据，然后解析，也和服务端差不多。当然在最开始的代码里有拨打电话、发短信等等功能，只是我们似着简化系统为我们想要的理想化模型。
+原理上和 Raspberry Pi 的原理很像，也就是GET数据，然后解析，也和服务端差不多。当然在最开始的代码里有拨打电话、发短信等等功能，只是我们似着简化系统为我们想要的理想化模型。
 
 源码地址[Home-Anywhere][3]
 ##Android开发##
@@ -1059,26 +1056,26 @@ led1的值是0，所以result[0]['led1]的值是0,如果你用过Ruby，那么�
 写在这里的原因是，因为我也不太擅长，所以也给不了多少指导。只是我试着去写过这样一个程序，有了几个版本，所以算是知道怎样去开发，但是相比较于专业于我的人还是有很多不足，所以希望懂得的人给些建议和意见。
 
 ###浅析###
-我们需要的库和在Raspberry PI上的类似，如果你不需要的话，可以看看之前的文章：
+我们需要的库和在 Raspberry Pi 上的类似，如果你不需要的话，可以看看之前的文章：
 
 [最小物联网系统（七）——与服务器通讯][comm]
 
 因为CSDN上发这些文章已经没有足够的必要，在之前的部分文章实在上是针对这部分写的， 只是在自己的博客上梳理了一遍。
 
-我们还要做的事情就是有一个RESTful的库，以及解析JSON用的。
+我们还要做的事情就是有一个 RESTful 的库，以及解析 JSON 用的。
 
 于是就有了下面两个
 
 ####RESTclient####
-这个类的原文在[calling-web-services-in-android-using-httpclient][2]，专门用于REST用的，如果熟悉的人我想一看就知道了。
+这个类的原文在[calling-web-services-in-android-using-httpclient][2]，专门用于 REST 用的，如果熟悉的人我想一看就知道了。
 
 ####GSON####
-这个库来自于Google，一个不错的库。
+这个库来自于 Google，一个不错的库。
 
 所以我们就构成了开发所需的两部分基础。
 
 ##Android##
-关于Android开发环境的配置这个网上有，最简单的办法是直接下载一个Android Studio。
+关于 Android 开发环境的配置这个网上有，最简单的办法是直接下载一个 Android Studio。
 
 下面只是列举一些代码以及可能会遇到的问题。
 
@@ -1086,18 +1083,18 @@ led1的值是0，所以result[0]['led1]的值是0,如果你用过Ruby，那么�
 
 如在源码里看到的那样，
 
-        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-                .detectDiskReads()
-                .detectDiskWrites()
-                .detectNetwork()   // or .detectAll() for all detectable problems
-                .penaltyLog()
-                .build());
-        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-                .detectLeakedSqlLiteObjects()
-                .detectLeakedClosableObjects()
-                .penaltyLog()
-                .penaltyDeath()
-                .build());
+    StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+            .detectDiskReads()
+            .detectDiskWrites()
+            .detectNetwork()   // or .detectAll() for all detectable problems
+            .penaltyLog()
+            .build());
+    StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+            .detectLeakedSqlLiteObjects()
+            .detectLeakedClosableObjects()
+            .penaltyLog()
+            .penaltyDeath()
+            .build());
 
 这部分用于Android 4.0的网络，2.*可以不需要。
 
@@ -1105,10 +1102,10 @@ led1的值是0，所以result[0]['led1]的值是0,如果你用过Ruby，那么�
 
 会产生下面这些代码的原因是下载下来的JSON数据是类似于二维数组，所以需要转换，下面的代码有些丑陋，但是可能工作得很好。
 
-       JSONArray jArray = new JSONArray(client.getResponse());
-       JSONObject jObj=jArray.getJSONObject(0);
+	JSONArray jArray = new JSONArray(client.getResponse());
+	JSONObject jObj=jArray.getJSONObject(0);
 
-###handlerData的由来###
+###handlerData 的由来###
 
     public GsonBuilder gsonb = new GsonBuilder();
     public Gson gson = gsonb.create();
@@ -1146,35 +1143,35 @@ led1的值是0，所以result[0]['led1]的值是0,如果你用过Ruby，那么�
         public int    id;
     }
 
-在某些程度上，我好像将这些代码给复杂化了，直接放在原文里可能会好一点，不过造成这种错觉的主要原因可能是受JAVA语言的影响，不过从软件工程的某些角度上来说，这样应该会好一点。
+在某些程度上，我好像将这些代码给复杂化了，直接放在原文里可能会好一点，不过造成这种错觉的主要原因可能是受 Java 语言的影响，不过从软件工程的某些角度上来说，这样应该会好一点。
 其他的:
 
- -  typePhoData的命名可能有些不尽人意，但是暂时没有想到一个合适的
- -  用过几天Ruby后，似乎这个不算是一个问题
+ -  typePhoData 的命名可能有些不尽人意，但是暂时没有想到一个合适的
+ -  用过几天 Ruby 后，似乎这个不算是一个问题
  -  如果你要修改的话，相信这个接口也不难，也许比原来的简单，前提是你看过原来的代码。
 
 整理完闭。
 
 ###REST POST###
 
-如果你需要POST，又懒得去看原文，那么POST代码在下面，只是因为我暂时没有时间去研究Android里面的这些，以及怎样继续这个项目，因为最小的话，似乎已经不再需要添加任何东西了。
+如果你需要 POST，又懒得去看原文，那么 POST 代码在下面，只是因为我暂时没有时间去研究 Android 里面的这些，以及怎样继续这个项目，因为最小的话，似乎已经不再需要添加任何东西了。
 
 
-                RestClient clientPost = new RestClient(url);
-                clientPost.AddParam("temperature", "23.1");
-                clientPost.AddParam("led", "true");
-                clientPost.AddParam("title", "from android");
-                clientPost.AddParam("more", "nEW tESET");
-                try {
-                        clientPost.Execute(RequestMethod.POST);
-                        if(client.getResponseCode()!=200){
-                                vshow.setText(clientPost.getErrorMessage());
-                        }
-                        String response2 = clientPost.getResponse();
-                        vshow.setText(response2.toString());
-                } catch (Exception e) {
-                        vshow.setText(e.toString());
-                }
+	RestClient clientPost = new RestClient(url);
+	clientPost.AddParam("temperature", "23.1");
+	clientPost.AddParam("led", "true");
+	clientPost.AddParam("title", "from android");
+	clientPost.AddParam("more", "nEW tESET");
+	try {
+	        clientPost.Execute(RequestMethod.POST);
+	        if(client.getResponseCode()!=200){
+	                vshow.setText(clientPost.getErrorMessage());
+	        }
+	        String response2 = clientPost.getResponse();
+	        vshow.setText(response2.toString());
+	} catch (Exception e) {
+	        vshow.setText(e.toString());
+	}
 
 大致上是类似的，注意一下都是字符就行了。
 
