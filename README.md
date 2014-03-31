@@ -70,12 +70,3 @@ Cabal是Haskell用于构建应用程序和库的公共架构。
 
      pandoc --latex-engine=xelatex iot.md -o iot.pdf -V mainfont="SimSun"
 
-#markdown转pdf 含中文#
-
-     pandoc --template=template.tex --latex-engine=xelatex iot.md -o iot.pdf
-
-也就是我们需要一个template.tex的模板用于构建，下载地址
-
-[https://raw.githubusercontent.com/tzengyuxio/pages/gh-pages/pandoc/pm-template.latex][4]
-
-[4]:https://raw.githubusercontent.com/tzengyuxio/pages/gh-pages/pandoc/pm-template.latex

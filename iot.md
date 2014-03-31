@@ -111,7 +111,7 @@ PATH\_OF\_HTDOCS/ 创建一个新的数据库，如iot 编辑 app/config/databas
         set $host_without_www $1;
         rewrite ^/(.*)$ $scheme://$host_without_www/$1 permanent;
         }
-        
+
         # Check if file exists
         if (!-e $request_filename)
         {
@@ -211,16 +211,16 @@ laravel用到了php的包管理工具composer，于是我们还需要用到compo
 
     curl -sS https://getcomposer.org/installer | php
 
-这里推荐的是linux系统，如果你是*nix都是可以的(ps:mac os x属于unix分支），除了windows，所以如果是windows，请直接下载 
+这里推荐的是linux系统，如果你是*nix都是可以的(ps:mac os x属于unix分支），除了windows，所以如果是windows，请直接下载
 
 [Composer-Setup][composer]
 
 然后让我们安装所需要的那些包
-    
+
     php composer.phar install
 
 当然这里用的是比较通用的，如果你是*nix，有支持可以直接
- 
+
     composer install
 
 
@@ -252,12 +252,12 @@ laravel用到了php的包管理工具composer，于是我们还需要用到compo
 
 </code></pre>
 如果你已经有phpmyadmin，似乎对你来说已经很简单了，如果没有的话，就直接用
-    
+
     mysql -uroot -p
 
 来创建一个新的
-    
-     CREATE DATABASE IF NOT EXISTS bbs default charset utf8 COLLATE utf8_general_ci; 
+
+     CREATE DATABASE IF NOT EXISTS bbs default charset utf8 COLLATE utf8_general_ci;
 
   [composer]: https://getcomposer.org/Composer-Setup.exe
 
@@ -287,12 +287,12 @@ laravel用到了php的包管理工具composer，于是我们还需要用到compo
 
 
 <pre><code class="php">
-      
+
     use Illuminate\Database\Schema\Blueprint;  
     use Illuminate\Database\Migrations\Migration;  
-      
+
     class CreateAthomesTable extends Migration {  
-      
+
         public function up()  
         {  
             Schema::create('athomes', function(Blueprint $table)  
@@ -305,13 +305,13 @@ laravel用到了php的包管理工具composer，于是我们还需要用到compo
                 $table->timestamps();  
             });  
         }  
-      
+
         public function down()  
         {  
             Schema::drop('athomes');  
         }  
-      
-    } 
+
+    }
 
 </code></pre>
 意思大致就是id是自加的，也就是我们在localhost/athome/{id}，当我们创建一个新的数据的时候，会自动加上去，最后一个timestamps批的是时间，会包含创建时间和修改时间。
@@ -323,7 +323,7 @@ laravel用到了php的包管理工具composer，于是我们还需要用到compo
     php artisan migrate
 
 这个就是我们执行迁移的命令，如果你用phpmyadmin可以直接打开查看，没有的话，可以。
-   
+
     mysql -uroot -p
     use iot;
     select * from athomes;
@@ -339,88 +339,90 @@ laravel用到了php的包管理工具composer，于是我们还需要用到compo
 
 就会在app/controllers下面生成下面的代码
 
-<pre><code class="php">      
+<pre><code class="php">
     class AthomesController extends \BaseController {  
-      
-        /** 
-         * Display a listing of the resource. 
-         * 
-         * @return Response 
+
+        /**
+         * Display a listing of the resource.
+         *
+         * @return Response
          */  
         public function index()  
         {  
             //  
         }  
-      
-        /** 
-         * Show the form for creating a new resource. 
-         * 
-         * @return Response 
+
+        /**
+         * Show the form for creating a new resource.
+         *
+         * @return Response
          */  
         public function create()  
         {  
             //  
         }  
-      
-        /** 
-         * Store a newly created resource in storage. 
-         * 
-         * @return Response 
+
+        /**
+         * Store a newly created resource in storage.
+         *
+         * @return Response
          */  
         public function store()  
         {  
             //  
         }  
-      
-        /** 
-         * Display the specified resource. 
-         * 
-         * @param  int  $id 
-         * @return Response 
+
+        /**
+         * Display the specified resource.
+         *
+         * @param  int  $id
+         * @return Response
          */  
         public function show($id)  
         {  
             //  
         }  
-      
-        /** 
-         * Show the form for editing the specified resource. 
-         * 
-         * @param  int  $id 
-         * @return Response 
+
+        /**
+         * Show the form for editing the specified resource.
+         *
+         * @param  int  $id
+         * @return Response
          */  
         public function edit($id)  
         {  
             //  
         }  
-      
-        /** 
-         * Update the specified resource in storage. 
-         * 
-         * @param  int  $id 
-         * @return Response 
+
+        /**
+         * Update the specified resource in storage.
+         *
+         * @param  int  $id
+         * @return Response
          */  
         public function update($id)  
         {  
             //  
         }  
-      
-        /** 
-         * Remove the specified resource from storage. 
-         * 
-         * @param  int  $id 
-         * @return Response 
+
+        /**
+         * Remove the specified resource from storage.
+         *
+         * @param  int  $id
+         * @return Response
          */  
         public function destroy($id)  
         {  
             //  
         }  
-      
-    } 
+
+    }
 </code></pre>
 
 ###Laravel Resources###
+
 上面的代码过于沉重，请让我用Ctrl+C来带来点知识吧。。
+
 
   Verb        Path                        Action    Route Name
   ----------- --------------------------- --------- ------------------
@@ -437,37 +439,37 @@ laravel用到了php的包管理工具composer，于是我们还需要用到compo
 app/model加个class
 
 <pre><code class="php">
-      
+
     class Athomes extends Eloquent {  
         protected $table = 'athomes';  
-    } 
+    }
 
 </code></pre>
 如果你想要的只是控制器Athomes的代码的话。。
 
-    
+
     class AthomesController extends \BaseController {
-    
+
     	/**
     	 * Display a listing of the resource.
     	 *
     	 * @return Response
     	 */
         public $restful=true;
-    
+
         protected $athome;
-    
+
     	public function __construct(Athomes $athome)
     	{
     	    $this--->athome = $athome ;
-    	 }    
-    
+    	 }
+
     	public function index()
     	{
     		$maxid=Athomes::all();
     	    return Response::json($maxid);
     	}
-    
+
     	/**
     	 * Show the form for creating a new resource.
     	 *
@@ -478,7 +480,7 @@ app/model加个class
     		$maxid=Athomes::max('id');
     		return View::make('athome.create')->with('maxid',$maxid);
     	}
-    
+
     	/**
     	 * Store a newly created resource in storage.
     	 *
@@ -495,7 +497,7 @@ app/model加个class
     			'temperature' => 'required|numeric|Min:-50|Max:80'
     		);
     		$validator = Validator::make(Input::all(), $rules);
-    
+
     		// process the login
     		if ($validator->fails()) {
     			return Redirect::to('athome/create')
@@ -509,13 +511,13 @@ app/model加个class
     			$nerd->temperature    = Input::get('temperature');
     			$nerd->led1			  = Input::get('led1');
     			$nerd->save();
-    
+
     			// redirect
     			Session::flash('message', 'Successfully created athome!');
     			return Redirect::to('athome');
     		}
     	}
-    
+
     	/**
     	 * Display the specified resource.
     	 *
@@ -530,7 +532,7 @@ app/model加个class
     						->get();
     	    return Response::json($maxid);
     	}
-    
+
     	/**
     	 * Show the form for editing the specified resource.
     	 *
@@ -541,12 +543,12 @@ app/model加个class
     	{
     		// get the nerd
     		$athome = Athomes::find($id);
-    
+
     		// show the edit form and pass the nerd
     		return View::make('athome.edit')
     			->with('athome', $athome);
     	}
-    
+
     	/**
     	 * Update the specified resource in storage.
     	 *
@@ -564,7 +566,7 @@ app/model加个class
     			'temperature' => 'required|numeric|Min:-50|Max:80'
     		);
     		$validator = Validator::make(Input::all(), $rules);
-    
+
     		// process the login
     		if ($validator->fails()) {
     			return Redirect::to('athome/' . $id . '/edit')
@@ -577,13 +579,13 @@ app/model加个class
     			$nerd->temperature    = Input::get('temperature');
     			$nerd->led1			  = Input::get('led1');
     			$nerd->save();
-    
+
     			// redirect
     			Session::flash('message', 'Successfully created athome!');
     			return Redirect::to('athome');
     		}
     	}
-    
+
     	/**
     	 * Remove the specified resource from storage.
     	 *
@@ -603,7 +605,7 @@ app/model加个class
     		Session::flash('message', 'Successfully deleted the nerd!');
     		return Redirect::to('athome');
     	}
-    
+
     }
 </code></pre>
 希望你能读懂，没有的话，关注下一节。
@@ -641,68 +643,56 @@ app/model加个class
 
 由于使用到了bootstrap以及bootstrap-select，记得添加css。
 
-<pre><code class="php">
-      <link rel="stylesheet" type="text/css" href="<?= url('css/bootstrap.min.css') ?>" />
-    <link rel="stylesheet" type="text/css" href="<?= url('css/bootstrap-select.min.css') ?>" />
-</code></pre>
-
+       <link rel="stylesheet" type="text/css" href="<?= url('css/bootstrap.min.css') ?>" />
+       <link rel="stylesheet" type="text/css" href="<?= url('css/bootstrap-select.min.css') ?>" />
+ 
  以及javascript
 
-<pre><code class="html">
-<script type="text/javascript" src="<?= url('js/jquery.min.js')?>"></script>
-<script type="text/javascript" src="<?= url('js/bootstrap.min.js') ?>"></script>
-<script type="text/javascript" src="<?= url('js/bootstrap-select.min.js') ?>"></script>
-<script>
- $('.selectpicker').selectpicker();
- </script>
-</code></pre>
-
+	<script type="text/javascript" src="<?= url('js/jquery.min.js')?>"></script>
+	<script type="text/javascript" src="<?= url('js/bootstrap.min.js') ?>"></script>
+	<script type="text/javascript" src="<?= url('js/bootstrap-select.min.js') ?>"></script>
+	<script>
+	 $('.selectpicker').selectpicker();
+ 	</script>
+ 
 
 ### 创建表单
 
 这里用到的是之前提到的那个作者写下的，稍微修改了一下。
 
-<pre><code class="html">
-  <div class="row-fluid">
-    {{ HTML::ul($errors->all()) }}
-    {{ Form::open(array('url' => 'athome')) }}
+   <div class="row-fluid">
+      {{ HTML::ul($errors->all()) }}
+      {{ Form::open(array('url' => 'athome')) }}
 
-       <div class="form-group">
-            {{ Form::label('led1', '开关1') }}
-            {{ Form::select('led1',array('关','开'),$selected=NULL,array('class'=>'selectpicker')) }}
+         <div class="form-group">
+              {{ Form::label('led1', '开关1') }}
+              {{ Form::select('led1',array('关','开'),$selected=NULL,array('class'=>'selectpicker')) }}
 
-        </div>
+          </div>
 
-        <div class="form-group">
-            {{ Form::label('sensors1', 'sensors1') }}
-            {{ Form::text('sensors1', Input::old('sensors1'), array('class' => 'form-control')) }}
-        </div>
+          <div class="form-group">
+              {{ Form::label('sensors1', 'sensors1') }}
+              {{ Form::text('sensors1', Input::old('sensors1'), array('class' => 'form-control')) }}
+          </div>
 
-        <div class="form-group">
-            {{ Form::label('sensors2', 'sensors2') }}
-            {{ Form::text('sensors2', Input::old('sensors2'), array('class' => 'form-control')) }}
-        </div>
+          <div class="form-group">
+              {{ Form::label('sensors2', 'sensors2') }}
+              {{ Form::text('sensors2', Input::old('sensors2'), array('class' => 'form-control')) }}
+          </div>
 
-        <div class="form-group">
-            {{ Form::label('temperature', 'temperature') }}
-            {{ Form::text('temperature', Input::old('temperature'), array('class' => 'form-control')) }}
-        </div>
+          <div class="form-group">
+              {{ Form::label('temperature', 'temperature') }}
+              {{ Form::text('temperature', Input::old('temperature'), array('class' => 'form-control')) }}
+          </div>
 
-        {{ Form::submit('Create!', array('class' => 'btn btn-primary')) }}
+          {{ Form::submit('Create!', array('class' => 'btn btn-primary')) }}
 
-    {{ Form::close() }}
+      {{ Form::close() }}
 
-    </div>
-</code></pre>
+      </div>
 
- 开关一开始打算用checkbox，加上bootstrap-switch实现
-
- 
-
-ON OFF
-
- 
-
+开关一开始打算用checkbox，加上bootstrap-switch实现
+    ON OFF
 弱弱地觉得还是没掌握好的节奏，所以最后用select来实现。
 
 还需要修改一下之前的create()，添加一行
@@ -748,87 +738,86 @@ return Redirect::to('athome');
 
 完整的blade模板文件
 
-<pre><code class="html">
-<!DOCTYPE html lang="zh-cn">
-<html>
-    <head>
-        <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-        <meta name="keywords" content="">
-        <meta name="viewport" content="width=device-width">
-        <meta name="description" content="">
-        <title>@yield('title')</title>
-        <link rel="stylesheet" type="text/css" href="<?= url('css/bootstrap.min.css') ?>" />
-        <link rel="stylesheet" type="text/css" href="<?= url('css/bootstrap-select.min.css') ?>" />
-        <link rel="stylesheet" href="<?= url('css/justified-nav.css') ?>" type="text/css" media="screen" />
-    </head>
-<body>
+    <!DOCTYPE html lang="zh-cn">
+    <html>
+        <head>
+            <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+            <meta name="keywords" content="">
+            <meta name="viewport" content="width=device-width">
+            <meta name="description" content="">
+            <title>@yield('title')</title>
+            <link rel="stylesheet" type="text/css" href="<?= url('css/bootstrap.min.css') ?>" />
+            <link rel="stylesheet" type="text/css" href="<?= url('css/bootstrap-select.min.css') ?>" />
+            <link rel="stylesheet" href="<?= url('css/justified-nav.css') ?>" type="text/css" media="screen" />
+        </head>
+    <body>
 
 
-<div class="container">
+    <div class="container">
 
-<div class="container">
-  <div class="row-fluid">
+    <div class="container">
+      <div class="row-fluid">
 
-<h1>Edit {{ $athome->id }}</h1>
+    <h1>Edit {{ $athome->id }}</h1>
 
-<!-- if there are creation errors, they will show here -->
-{{ HTML::ul($errors->all()) }}
+    <!-- if there are creation errors, they will show here -->
+    {{ HTML::ul($errors->all()) }}
 
-{{ Form::model($athome, array('route' => array('athome.update', $athome->id), 'method' => 'PUT')) }}
-        
-        <div class="form-group">
-            {{ Form::label('led1', '开关1') }}
-            {{ Form::select('led1',array('关','开'),$selected=NULL,array('class'=>'selectpicker')) }}
+    {{ Form::model($athome, array('route' => array('athome.update', $athome->id), 'method' => 'PUT')) }}
+
+            <div class="form-group">
+                {{ Form::label('led1', '开关1') }}
+                {{ Form::select('led1',array('关','开'),$selected=NULL,array('class'=>'selectpicker')) }}
+
+            </div>
+
+            <div class="form-group">
+                {{ Form::label('sensors1', '传感器1') }}
+                {{ Form::text('sensors1', Input::old('sensors1'), array('class' => 'form-control')) }}
+            </div>
+
+            <div class="form-group">
+                {{ Form::label('sensors2', '传感器2') }}
+                {{ Form::text('sensors2', Input::old('sensors2'), array('class' => 'form-control')) }}
+            </div>
+
+            <div class="form-group">
+                {{ Form::label('temperature', '温度传感器') }}
+                {{ Form::text('temperature', Input::old('temperature'), array('class' => 'form-control')) }}
+            </div>
+
+
+        {{ Form::submit('Edit the Nerd!', array('class' => 'btn btn-primary')) }}
+
+    {{ Form::close() }}
 
         </div>
-
-        <div class="form-group">
-            {{ Form::label('sensors1', '传感器1') }}
-            {{ Form::text('sensors1', Input::old('sensors1'), array('class' => 'form-control')) }}
-        </div>
-
-        <div class="form-group">
-            {{ Form::label('sensors2', '传感器2') }}
-            {{ Form::text('sensors2', Input::old('sensors2'), array('class' => 'form-control')) }}
-        </div>
-
-        <div class="form-group">
-            {{ Form::label('temperature', '温度传感器') }}
-            {{ Form::text('temperature', Input::old('temperature'), array('class' => 'form-control')) }}
-        </div>
+    </div>
 
 
-    {{ Form::submit('Edit the Nerd!', array('class' => 'btn btn-primary')) }}
-
-{{ Form::close() }}
+    <div class="footer">
+            <p>© Company 2013</p>
+          </div>
+    </div>
 
     </div>
-</div>
+    <script type="text/javascript" src="<?= url('js/jquery.min.js')?>"></script>
+    <script type="text/javascript" src="<?= url('js/bootstrap.min.js') ?>"></script>
+    <script type="text/javascript" src="<?= url('js/bootstrap-select.min.js') ?>"></script>
+    <script>
+     $('.selectpicker').selectpicker();
+     </script>
+    <script type="text/javascript" src="<?= url('js/log.js') ?>"></script>
 
 
-<div class="footer">
-        <p>© Company 2013</p>
-      </div>
-</div>
-
-</div>
-<script type="text/javascript" src="<?= url('js/jquery.min.js')?>"></script>
-<script type="text/javascript" src="<?= url('js/bootstrap.min.js') ?>"></script>
-<script type="text/javascript" src="<?= url('js/bootstrap-select.min.js') ?>"></script>
-<script>
- $('.selectpicker').selectpicker();
- </script>
-<script type="text/javascript" src="<?= url('js/log.js') ?>"></script>
-
-
-</body>
-</html>
-</code></pre>
+    </body>
+    </html>
+    
 
 最后效果见:[http://b.phodal.com/][bphodal]
 
 代码位置:[http://b.phodal.com/js/app.js][appjs]
- 
+
 我觉得似乎我把这个代码写长了，但是我不是故意，只是必需的。先观察Ajax部分：
 
 ##Ajax##
@@ -836,7 +825,7 @@ return Redirect::to('athome');
 剥离后的Ajax部分代码如下所示，主要用的是jQuery框架的getJSON来实现的
 
     var dataLength = [];
-    
+
     function drawTemp() {
         var zero = [];
         $.getJSON('/athome/', function(json) {
@@ -954,7 +943,7 @@ Highcharts是一个制作图表的纯Javascript类库，主要特性如下：
 示例中的代码是这样子的，如果你没有看懂的话，那么等等 。
 
     import json,urllib2
-    
+
     url="http://b.phodal.com/athome/1"
     while True:
         status=json.load(urllib2.urlopen(url))[0]['led1']
@@ -965,9 +954,9 @@ Highcharts是一个制作图表的纯Javascript类库，主要特性如下：
 
     import json
     import urllib2
-    
+
     url="http://b.phodal.com/athome/1"
-    
+
     while 1:
             date=urllib2.urlopen(url)
             result=json.load(date)
@@ -995,7 +984,7 @@ python带有json解析模块，我们在这里只需要用json.load()来解析�
     result=json.load(date)
 
 解析完的result相当于是C语言里面的数组，在这里相当于是一个二维数组，我们只需要result[0]['led1']，在python里面叫做字典，意思就是和字典一样。
-     
+
      "led1":0
 
 led1的值是0，所以result[0]['led1]的值是0,如果你用过Ruby，那么这个和其中的Hash差不多。
@@ -1014,7 +1003,7 @@ led1的值是0，所以result[0]['led1]的值是0,如果你用过Ruby，那么�
       Serial.begin(9600);
       pinMode(13,OUTPUT);
     }
-    
+
     int serialData;
     void loop() {
       String inString = "";
@@ -1022,7 +1011,7 @@ led1的值是0，所以result[0]['led1]的值是0,如果你用过Ruby，那么�
       {
         int inChar = Serial.read();
         if (isDigit(inChar)) {
-          inString += (char)inChar; 
+          inString += (char)inChar;
         }
         serialData=inString.toInt();
         Serial.print(serialData);
@@ -1037,11 +1026,11 @@ led1的值是0，所以result[0]['led1]的值是0,如果你用过Ruby，那么�
 这个代码看上去似乎会有点复杂，但是让我们看点基础的，也就是由Arduino来控制一个LED的亮和灭。
 
     int led = 13;
-    
-    void setup() {                
-      pinMode(led, OUTPUT);     
+
+    void setup() {
+      pinMode(led, OUTPUT);
     }
-    
+
     void loop() {
       digitalWrite(led, HIGH);   // turn the LED on (HIGH is the voltage level)
       delay(1000);               // wait for a second
@@ -1068,16 +1057,16 @@ led1的值是0，所以result[0]['led1]的值是0,如果你用过Ruby，那么�
 ###串口读取###
 
 
-     while (Serial.available()&lt;0)
+     while (Serial.available()<0)
       {
         int inChar = Serial.read();
         if (isDigit(inChar)) {
-          inString += (char)inChar; 
+          inString += (char)inChar;
         }
         serialData=inString.toInt();
 
 用于读取的就是这么一行
-   
+
      int inChar=Serial.read()
 
 而下面的部分则是刚我们接收到的数据转换为1,由于接到的为char类型，那么我们需要转为转为Int进行判断。
@@ -1139,11 +1128,11 @@ led1的值是0，所以result[0]['led1]的值是0,如果你用过Ruby，那么�
 这部分用于Android 4.0的网络，2.*可以不需要。
 
 ###JSONObject 以及 JSONArray###
- 
+
 会产生下面这些代码的原因是下载下来的JSON数据是类似于二维数组，所以需要转换，下面的代码有些丑陋，但是可能工作得很好。
 
        JSONArray jArray = new JSONArray(client.getResponse());
-            JSONObject jObj=jArray.getJSONObject(0);
+       JSONObject jObj=jArray.getJSONObject(0);
 
 ###handlerData的由来###
 
