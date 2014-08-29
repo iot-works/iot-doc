@@ -253,7 +253,7 @@ laravel 用到了 php 的包管理工具 composer，于是我们还需要用到 
 
 来创建一个新的
 
-	CREATE DATABASE IF NOT EXISTS bbs default charset utf8 COLLATE utf8_general_ci;
+	CREATE DATABASE IF NOT EXISTS iot default charset utf8 COLLATE utf8_general_ci;
 
   [composer]: https://getcomposer.org/Composer-Setup.exe
 
