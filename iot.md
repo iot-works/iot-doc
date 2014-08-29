@@ -274,11 +274,11 @@ laravel 用到了 php 的包管理工具 composer，于是我们还需要用到 
 
 ###创建表###
 表的概念，类似于在Excel中的表，如果你真实不懂数据库。
-让我们创建一个athomes的表，为什么是athomes，因为以前在写android程序的时候就叫的是athome，忽略掉这些将要的因素吧。
+让我们创建一个athomes的表，为什么是athomes，因为以前在写android程序的时候就叫的是athome，忽略掉这些次要的因素吧。
 
     $ php artisan migrate:make create_athomes_table
 
-打开 app/database/***create_athomes_table.php这里的***是由日期和某些东西组成的，修改生成的代码为下面。
+打开 app/database/migrations/***create_athomes_table.php这里的***是由日期和某些东西组成的，修改生成的代码为下面。
 
     use Illuminate\Database\Schema\Blueprint;  
     use Illuminate\Database\Migrations\Migration;  
